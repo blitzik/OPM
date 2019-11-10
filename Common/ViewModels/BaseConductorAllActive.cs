@@ -49,6 +49,17 @@ namespace Common.ViewModels
         }
 
 
+        // -----
+
+
+        public event System.Action OnOverlayExitClick;
+
+        public void CloseOverlay()
+        {
+            OnOverlayExitClick?.Invoke();
+        }
+
+
         // ----- INotifyDataErrorInfo
 
 

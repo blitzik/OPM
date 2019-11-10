@@ -62,6 +62,9 @@ namespace Common.Overlay
             };
 
             _token = token;
+            _token.Content.OnOverlayExitClick += () => {
+                _token.HideOverlay();
+            };
             NotifyOfPropertyChange(() => Token);
             NotifyOfPropertyChange(() => IsActive);
 
@@ -92,6 +95,9 @@ namespace Common.Overlay
             }
 
             _token = token;
+            _token.Content.OnOverlayExitClick += () => {
+                _token.HideOverlay();
+            };
             NotifyOfPropertyChange(() => Token);
             NotifyOfPropertyChange(() => IsActive);
 

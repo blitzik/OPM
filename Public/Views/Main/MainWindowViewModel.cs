@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Common.FlashMessages;
+using Common.Overlay;
 using Common.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -18,9 +19,13 @@ namespace Public.Views
             get { return _flashMessagesManager; }
         }
 
+
+        private TestViewModel _testViewModel;
+
         public MainWindowViewModel(IFlashMessagesManager flashMessagesManager)
         {
             _flashMessagesManager = flashMessagesManager;
+            _testViewModel = new TestViewModel("Hello World :-))");
         }
 
 
@@ -34,7 +39,7 @@ namespace Public.Views
 
         public void ProcessClick()
         {
-            LocalOverlay.DisplayOverlay(new TestViewModel());
+            LocalOverlay.DisplayOverlay(_testViewModel);
         }
     }
 }

@@ -7,8 +7,27 @@ namespace Public.Views
 {
     public class TestViewModel : BaseScreen
     {
-        public TestViewModel()
+        private string _text;
+        public string Text
         {
+            get { return _text; }
+            set { _text = value; }
+        }
+
+
+        private FirstViewModel _firstViewModel;
+
+
+        public TestViewModel(string text)
+        {
+            Text = text;
+            _firstViewModel = new FirstViewModel();
+        }
+
+
+        public void ProcessClick()
+        {
+            LocalOverlay.DisplayOverlay(_firstViewModel);
         }
     }
 }
