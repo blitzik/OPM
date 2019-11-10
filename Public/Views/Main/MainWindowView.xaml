@@ -10,7 +10,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:c="http://caliburnmicro.com"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="760" Width="1280">
 
    <Window.Resources>
         <converters:ViewModelToBooleanConverter x:Key="ViewModelToBooleanConverter" />
@@ -60,7 +60,7 @@
                 </Border.Resources>
             </Border>
 
-            <ContentControl VerticalAlignment="Center" HorizontalAlignment="Center" c:View.Model="{Binding LocalOverlay.Token.Content, UpdateSourceTrigger=PropertyChanged}" c:View.Context="{Binding LocalOverlay.Token.Content.Context, UpdateSourceTrigger=PropertyChanged}" />
+            <ContentControl c:View.Model="{Binding LocalOverlay.Token.Content, UpdateSourceTrigger=PropertyChanged}" c:View.Context="{Binding LocalOverlay.Token.Content.Context, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
 
         <fm:FlashMessagesControl Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
