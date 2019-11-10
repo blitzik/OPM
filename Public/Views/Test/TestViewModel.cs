@@ -7,5 +7,8 @@ namespace Public.Views
 {
     public class TestViewModel : BaseScreen
     {
+        public TestViewModel()
+        {
+        }
     }
 }
