@@ -25,24 +25,21 @@
 
         <!-- Content -->
         <Border Grid.Column="0">
-            <!--<ContentControl c:View.Model="{Binding ActiveItem, UpdateSourceTrigger=PropertyChanged}">
+            <ContentControl c:View.Model="{Binding ActiveItem, UpdateSourceTrigger=PropertyChanged}">
                 <b:ContentControlExtension.Storyboard>
                     <Storyboard>
                         <DoubleAnimation Storyboard.TargetProperty="Opacity" From=".5" To="1" Duration="0:0:.25" />
                     </Storyboard>
                 </b:ContentControlExtension.Storyboard>
-            </ContentControl>-->
-            <Button Content="Awaeaew" Width="150" Height="50" x:Name="ProcessClick" />
+            </ContentControl>
         </Border>
 
 
         <!-- Overlay -->
         <Grid b:AnimateableVisibility.Visibility="{Binding LocalOverlay.IsActive, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=reversed}"
               b:AnimateableVisibility.Duration="200"
-              Grid.RowSpan="2"
               Grid.Column="0"
-              Panel.ZIndex="200"
-              Grid.ColumnSpan="2">
+              Panel.ZIndex="200">
             <Border>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseLeftButtonUp">

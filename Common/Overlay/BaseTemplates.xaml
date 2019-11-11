@@ -23,10 +23,8 @@
             <!-- Overlay -->
             <Grid b:AnimateableVisibility.Visibility="{Binding LocalOverlay.IsActive, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=reversed}"
                   b:AnimateableVisibility.Duration="200"
-                  Grid.RowSpan="2"
                   Grid.Column="0"
-                  Panel.ZIndex="1000"
-                  Grid.ColumnSpan="2">
+                  Panel.ZIndex="1000">
                 <Border>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseLeftButtonUp">

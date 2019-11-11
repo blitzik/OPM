@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
+using Common.Factories;
+using Common.Utils.ResultObject;
 
 namespace CmTest
 {
@@ -46,6 +48,7 @@ namespace CmTest
             _container.Singleton<IWindowManager, WindowManager>();
             _container.Singleton<IFlashMessagesManager, FlashMessagesManager>();
             _container.Singleton<IViewModelResolver, ViewModelResolver>();
+            _container.Singleton<IViewModelFactoryResolver, ViewModelFactoryResolver>();
 
 
             // Services
@@ -53,14 +56,12 @@ namespace CmTest
 
             // Factories
 
+            
             // Facades
 
 
             // Windows
             _container.Singleton<MainWindowViewModel>();
-
-
-            // ViewModels
 
 
             // Subscribers
@@ -91,7 +92,7 @@ namespace CmTest
                 //ro.AddMessage("Při spouštění aplikace došlo k neočekávané chybě");
             }
 
-            //if (!ro.Success) {// todo
+            //if (!ro.Success) { // todo
             /*StartupErrorWindowViewModel errw = _container.GetInstance<StartupErrorWindowViewModel>();
             errw.Text = ro.GetLastMessage().Text;
             _container.GetInstance<IWindowManager>().ShowDialog(errw);*/
