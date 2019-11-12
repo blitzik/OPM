@@ -14,7 +14,8 @@ namespace Common.Overlay
 
         IOverlayToken DisplayOverlay(IOverlayToken overlayToken);
         IOverlayToken DisplayOverlay<VM>(VM content, bool isMandatory = false, Action<IOverlayToken> onHideAction = null) where VM : IViewModel;
-
+        
+        
         /// <summary>
         /// Hides overlay and deactivates currently active Token
         /// </summary>

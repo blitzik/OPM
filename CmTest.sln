@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Public", "Public\Public.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{483ED202-495F-478E-AB2A-21106E925C45}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Measurement", "Measurement\Measurement.csproj", "{1C9C5512-1DF4-48E0-8792-7FFDF2DA7746}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{483ED202-495F-478E-AB2A-21106E925C45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{483ED202-495F-478E-AB2A-21106E925C45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{483ED202-495F-478E-AB2A-21106E925C45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C9C5512-1DF4-48E0-8792-7FFDF2DA7746}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C9C5512-1DF4-48E0-8792-7FFDF2DA7746}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C9C5512-1DF4-48E0-8792-7FFDF2DA7746}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C9C5512-1DF4-48E0-8792-7FFDF2DA7746}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,6 +8,7 @@
                 <ResourceDictionary>
                     <local:Bootstrapper x:Key="Bootstrapper" />
                 </ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/Public;component/Styles/Styles.xaml" />
             <ResourceDictionary Source="pack://application:,,,/Common;component/Overlay/BaseTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

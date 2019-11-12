@@ -52,11 +52,34 @@ namespace Common.Overlay
         {
             if (token == null) throw new ArgumentNullException();
 
+            PrepareToken(token);
+
+            return token;
+        }
+
+
+        public IOverlayToken DisplayOverlay<VM>(VM content, bool isMandatory = false, Action<IOverlayToken> onHideAction = null) where VM : IViewModel
+        {
+            if (content == null) throw new ArgumentNullException();
+
+            IOverlayToken token = new OverlayToken(content, isMandatory);
+            if (onHideAction != null) {
+                token.OnOverlayHide += onHideAction;
+            }
+            
+            PrepareToken(token);
+
+            return token;
+        }
+
+
+        private void PrepareToken(IOverlayToken token)
+        {
             token.OnOverlayHide += (t) => {
                 if (t != Token) { // only current active token can disable overlay
                     return;
                 }
-
+                
                 NotifyOfPropertyChange(() => Token);
                 NotifyOfPropertyChange(() => IsActive);
             };
@@ -71,41 +94,6 @@ namespace Common.Overlay
             if (token.Content != null) {
                 ScreenExtensions.TryActivateAsync(token.Content);
             }
-
-            return token;
-        }
-
-
-        public IOverlayToken DisplayOverlay<VM>(VM content, bool isMandatory = false, Action<IOverlayToken> onHideAction = null) where VM : IViewModel
-        {
-            if (content == null) throw new ArgumentNullException();
-
-            IOverlayToken token = new OverlayToken(content, isMandatory);
-            token.OnOverlayHide += (t) => {
-                if (t != Token) { // only current active token can disable overlay
-                    return;
-                }
-                
-                NotifyOfPropertyChange(() => Token);
-                NotifyOfPropertyChange(() => IsActive);
-            };
-
-            if (onHideAction != null) {
-                token.OnOverlayHide += onHideAction;
-            }
-
-            _token = token;
-            _token.Content.OnOverlayExitClick += () => {
-                _token.HideOverlay();
-            };
-            NotifyOfPropertyChange(() => Token);
-            NotifyOfPropertyChange(() => IsActive);
-
-            if (content != null) {
-                ScreenExtensions.TryActivateAsync(content);
-            }
-
-            return token;
         }
 
 

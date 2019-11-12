@@ -13,6 +13,14 @@ namespace Common.ViewModels
 {
     public abstract class BaseScreen : Screen, IViewModel, INotifyDataErrorInfo
     {
+        private string _context;
+        public string Context
+        {
+            get { return _context; }
+            set { _context = value; }
+        }
+        
+        
         private IOverlay _localOverlay;
         public IOverlay LocalOverlay
         {

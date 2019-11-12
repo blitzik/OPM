@@ -15,12 +15,15 @@ namespace Public.Views
         private readonly IViewModelFactoryResolver _viewModelFactoryResolver;
         private readonly IEventAggregator _eventAggregator;
 
+        private readonly StartupViewModel _startupViewModel;
+
        public MainWindowViewModel(
             IEventAggregator eventAggregator,
             IViewModelFactoryResolver viewModelFactoryResolver
        ) {
            _eventAggregator = eventAggregator;
            _viewModelFactoryResolver = viewModelFactoryResolver;
+           _startupViewModel = new StartupViewModel();
        }
 
 
@@ -30,6 +33,8 @@ namespace Public.Views
 
             _eventAggregator.SubscribeOnPublishedThread(this);
 
+            ActivateItemAsync(_startupViewModel, cancellationToken);
+            
             return t;
         }
 

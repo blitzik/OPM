@@ -15,6 +15,14 @@ namespace Common.ViewModels
 {
     public abstract class BaseConductorAllActive<P> : Conductor<P>.Collection.AllActive, IViewModel, INotifyDataErrorInfo where P : class, IViewModel
     {
+        private string _context;
+        public string Context
+        {
+            get { return _context; }
+            set { _context = value; }
+        }
+        
+        
         private IOverlay _localOverlay;
         public IOverlay LocalOverlay
         {
