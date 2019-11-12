@@ -45,7 +45,6 @@ namespace Public.Views
                 return null;
             }
             
-            message.Apply();
             ActivateItemAsync(vm, cancellationToken);
 
             return null;
