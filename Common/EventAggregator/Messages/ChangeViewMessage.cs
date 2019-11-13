@@ -7,12 +7,13 @@ using Common.ViewModelResolver;
 
 namespace Common.EventAggregator.Messages
 {
-    public class ChangeViewMessage<T, Tvm> : IChangeViewMessage<IViewModelFactory, Tvm> where Tvm : IViewModel
+    public class ChangeViewMessage<T, Tvm> : IChangeViewMessage<IViewModelFactory, Tvm>
+        where Tvm : IViewModel
         where T : IViewModelFactory
     {
-        public bool IsUnique { get; }
-        public string Channel { get; }
+        public bool IsViewModelUnique { get; }
         public Type ViewModel { get; }
+        public string Channel { get; }
         
 
         private readonly Func<T, Tvm> _builder;
@@ -22,7 +23,7 @@ namespace Common.EventAggregator.Messages
         {
             _viewModelFactoryType = typeof(T);
             ViewModel = typeof(Tvm);
-            IsUnique = isUnique;
+            IsViewModelUnique = isUnique;
             Channel = channel;
             _builder = builder;
         }

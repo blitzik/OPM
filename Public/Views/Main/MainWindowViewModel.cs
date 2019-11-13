@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using System.Collections.Generic;
+using Caliburn.Micro;
 using Common.EventAggregator.Messages;
 using Common.ViewModels;
 using System.Threading;
@@ -15,6 +16,8 @@ namespace Public.Views
         private readonly IViewModelFactoryResolver _viewModelFactoryResolver;
         private readonly IEventAggregator _eventAggregator;
 
+        private Dictionary<string, IViewModel> _uniqueViewModels;
+        
         private readonly StartupViewModel _startupViewModel;
 
        public MainWindowViewModel(
@@ -24,6 +27,7 @@ namespace Public.Views
            _eventAggregator = eventAggregator;
            _viewModelFactoryResolver = viewModelFactoryResolver;
            _startupViewModel = new StartupViewModel();
+           _uniqueViewModels = new Dictionary<string, IViewModel>();
        }
 
 
@@ -44,8 +48,26 @@ namespace Public.Views
             if (!message.Channel.Equals(nameof(MainWindowViewModel)) && !message.Channel.Equals("all")) {
                 return null;
             }
-            
-            var vm = message.GetViewModel(_viewModelFactoryResolver);
+
+            IViewModel vm = null;
+            if (_uniqueViewModels.ContainsKey(message.ViewModel.FullName)) {
+                vm = _uniqueViewModels[message.ViewModel.FullName];
+
+                if (message.IsViewModelUnique == false) _uniqueViewModels.Remove(message.ViewModel.FullName);
+            }
+
+            // Create new viewmodel when:
+            // vm == null && IsUnique == true   YES
+            // vm == null && IsUnique == false  YES
+            // vm != null && IsUnique == true   NO
+            // vm != null && IsUnique == false  YES
+            if (vm == null || message.IsViewModelUnique == false) {
+                vm = message.GetViewModel(_viewModelFactoryResolver);
+                if (message.IsViewModelUnique == true) {
+                    _uniqueViewModels.Add(message.ViewModel.FullName, vm);
+                }
+            }
+
             if (vm == ActiveItem) {
                 return null;
             }

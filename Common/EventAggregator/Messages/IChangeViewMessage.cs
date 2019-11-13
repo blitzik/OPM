@@ -13,10 +13,10 @@ namespace Common.EventAggregator.Messages
         /// <summary>
         /// Tells whether a parent ViewModel should store the acquired child viewModel (and make it unique)
         /// </summary>
-        public bool IsUnique { get; }
-        
-        public string Channel { get; }
+        public bool IsViewModelUnique { get; }
 
+        public string Channel { get; }
+        
         public Type ViewModel { get; }
 
         public Tvm GetViewModel(IViewModelFactoryResolver resolver);
