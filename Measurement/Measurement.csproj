@@ -13,4 +13,8 @@
       <ProjectReference Include="..\Common\Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="RavenDB.Client" Version="4.2.5-patch-42026" />
+    </ItemGroup>
+
 </Project>

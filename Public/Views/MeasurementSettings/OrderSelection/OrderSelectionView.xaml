@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="Public.Views.OrderSelectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Public.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    <Grid Margin="0 15 0 0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="45" />
+            <RowDefinition Height="15" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="45" />
+            <RowDefinition Height="15" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+    
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Zakázka" Style="{StaticResource LabelText}" />
+        <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding OrderName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LargeTextBox}" />
+    
+        <Button Grid.Row="1" Grid.Column="2" Content="Vyhledat položky" x:Name="SearchForItems" Style="{StaticResource PrimaryButton}" />
+    
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Položka číslo" Style="{StaticResource LabelText}" />
+        <TextBox Grid.Row="4" Grid.Column="0" Text="{Binding ItemNumber, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource LargeTextBox}" />
+    
+        <!--<Button Grid.Row="4" Grid.Column="2" Content="Přidat položku" Style="{StaticResource DefaultButton}" />-->
+    
+        <ListView Grid.Row="6" Grid.Column="0" ItemsSource="{Binding Items, UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Number}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>

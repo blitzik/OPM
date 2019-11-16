@@ -7,8 +7,13 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
-using Common.Factories;
-using Common.Utils.ResultObject;
+using System.Windows.Threading;
+using Measurement.Facades;
+using Measurement.Services.Items;
+using Measurement.Services.Items.RavenDB;
+using Measurement.Services.Orders;
+using Measurement.Services.Orders.RavenDB;
+using Measurement.Services.RavenDB;
 
 namespace CmTest
 {
@@ -52,12 +57,20 @@ namespace CmTest
 
 
             // Services
+            _container.Instance<RavenDatabase>(new RavenDatabase("opm", "http://127.0.0.1:8080"));
+            _container.Singleton<IOrdersWriter, OrdersWriter>();
+            _container.Singleton<IItemsLoader, ItemsLoader>();
 
 
             // Factories
+            _container.Singleton<StartupViewModelFactory>();
+            _container.Singleton<MeasurementBaseViewModelFactory>();
+            _container.Singleton<OrderSelectionViewModelFactory>();
+            _container.Singleton<MeasurementSettingsViewModelFactory>();
 
             
             // Facades
+            _container.Singleton<ContractFacade>();
 
 
             // Windows
@@ -113,6 +126,7 @@ namespace CmTest
         protected override void OnExit(object sender, EventArgs e)
         {
             //mutex.ReleaseMutex();
+            _container.GetInstance<RavenDatabase>().Dispose();
         }
 
 
@@ -140,6 +154,12 @@ namespace CmTest
         protected override void BuildUp(object instance)
         {
             _container.BuildUp(instance);
+        }
+
+
+        protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            base.OnUnhandledException(sender, e);
         }
     }
 }

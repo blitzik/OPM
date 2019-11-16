@@ -15,9 +15,9 @@ namespace Common.ViewModelResolver
         }
         
         
-        public T Resolve<T>(Type factory) where T : IViewModelFactory
+        public T Resolve<T>() where T : IViewModelFactory
         {
-            return (T)_container.GetInstance(factory, null);
+            return (T)_container.GetInstance(typeof(T), null);
         }
     }
 }

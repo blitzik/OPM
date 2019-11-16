@@ -17,4 +17,11 @@
     <ProjectReference Include="..\Measurement\Measurement.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Remove="Styles\Styles.xaml" />
+    <Resource Include="Styles\Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
+  </ItemGroup>
+
 </Project>

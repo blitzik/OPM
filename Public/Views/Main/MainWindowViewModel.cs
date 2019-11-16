@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Caliburn.Micro;
 using Common.EventAggregator.Messages;
-using Common.ViewModels;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Factories;
@@ -10,7 +9,7 @@ using Common.ViewModelResolver;
 namespace Public.Views
 {
     public class MainWindowViewModel :
-        BaseConductorOneActive<IViewModel>,
+        BaseConductorOneActive,
         IHandle<IChangeViewMessage<IViewModelFactory, IViewModel>>
     {
         private readonly IViewModelFactoryResolver _viewModelFactoryResolver;
@@ -26,8 +25,8 @@ namespace Public.Views
        ) {
            _eventAggregator = eventAggregator;
            _viewModelFactoryResolver = viewModelFactoryResolver;
-           _startupViewModel = new StartupViewModel();
            _uniqueViewModels = new Dictionary<string, IViewModel>();
+           _startupViewModel = _viewModelFactoryResolver.Resolve<StartupViewModelFactory>().Create();
        }
 
 
@@ -50,10 +49,11 @@ namespace Public.Views
             }
 
             IViewModel vm = null;
-            if (_uniqueViewModels.ContainsKey(message.ViewModel.FullName)) {
-                vm = _uniqueViewModels[message.ViewModel.FullName];
+            string key = message.ViewModel.FullName;
+            if (_uniqueViewModels.ContainsKey(key)) {
+                vm = _uniqueViewModels[key];
 
-                if (message.IsViewModelUnique == false) _uniqueViewModels.Remove(message.ViewModel.FullName);
+                if (message.IsViewModelUnique == false) _uniqueViewModels.Remove(key);
             }
 
             // Create new viewmodel when:
@@ -64,7 +64,7 @@ namespace Public.Views
             if (vm == null || message.IsViewModelUnique == false) {
                 vm = message.GetViewModel(_viewModelFactoryResolver);
                 if (message.IsViewModelUnique == true) {
-                    _uniqueViewModels.Add(message.ViewModel.FullName, vm);
+                    _uniqueViewModels.Add(key, vm);
                 }
             }
 

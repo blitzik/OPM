@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Common.Overlay;
-using Common.ViewModels;
 
 namespace Public.Views.ConfirmationDialog
 {

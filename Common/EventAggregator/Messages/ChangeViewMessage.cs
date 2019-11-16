@@ -31,7 +31,7 @@ namespace Common.EventAggregator.Messages
         
         public Tvm GetViewModel(IViewModelFactoryResolver resolver)
         {
-            T f = resolver.Resolve<T>(_viewModelFactoryType);
+            T f = resolver.Resolve<T>();
             return _builder.Invoke(f);
         }
     }
