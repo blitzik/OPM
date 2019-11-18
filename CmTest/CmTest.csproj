@@ -9,7 +9,11 @@
 
   <ItemGroup>
     <PackageReference Include="Caliburn.Micro" Version="4.0.102-alpha" />
-    <PackageReference Include="RavenDB.Client" Version="4.2.5-patch-42026" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.3" />
   </ItemGroup>
 
   <ItemGroup>

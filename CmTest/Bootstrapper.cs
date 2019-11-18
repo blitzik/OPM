@@ -10,10 +10,10 @@ using System.Windows;
 using System.Windows.Threading;
 using Measurement.Facades;
 using Measurement.Services.Items;
-using Measurement.Services.Items.RavenDB;
+using Measurement.Services.Items.SqLite;
 using Measurement.Services.Orders;
-using Measurement.Services.Orders.RavenDB;
-using Measurement.Services.RavenDB;
+using Measurement.Services.Orders.SqLite;
+using Measurement.Services.SQLite;
 
 namespace CmTest
 {
@@ -57,10 +57,12 @@ namespace CmTest
 
 
             // Services
-            _container.Instance<RavenDatabase>(new RavenDatabase("opm", "http://127.0.0.1:8080"));
+            _container.Instance<DatabaseContext>(new DatabaseContext());
             _container.Singleton<IOrdersWriter, OrdersWriter>();
+            _container.Singleton<IOrdersLoader, OrdersLoader>();
+            _container.Singleton<IItemsWriter, ItemsWriter>();
             _container.Singleton<IItemsLoader, ItemsLoader>();
-
+                
 
             // Factories
             _container.Singleton<StartupViewModelFactory>();
@@ -126,7 +128,6 @@ namespace CmTest
         protected override void OnExit(object sender, EventArgs e)
         {
             //mutex.ReleaseMutex();
-            _container.GetInstance<RavenDatabase>().Dispose();
         }
 
 

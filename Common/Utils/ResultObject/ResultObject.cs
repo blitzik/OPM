@@ -24,20 +24,20 @@ namespace Common.Utils.ResultObject
         }
 
 
-        private T _result;
-        public T Result
+        private T _value;
+        public T Value
         {
-            get { return _result; }
+            get { return _value; }
         }
 
 
         private List<ResultMessage> _messages;
 
-        public ResultObject(bool success, T result = null)
+        public ResultObject(bool success, T value = null)
         {
             _messages = new List<ResultMessage>();
             _success = success;
-            _result = result;
+            _value = value;
         }
 
 

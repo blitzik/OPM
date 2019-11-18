@@ -21,7 +21,8 @@ namespace Public.Views
         
         public Dictionary<int, Task> BackgroundWorks { get; }
         public Dictionary<int, CancellationTokenSource> CancellationTokenSources { get; }
-        
+
+        public event Action<TSettings> OnFinishedSettings;
         
         private bool _isLocked;
         private int _cursor;
@@ -41,7 +42,9 @@ namespace Public.Views
             var t = base.OnInitializeAsync(cancellationToken);
 
             _isLocked = true;
-            Initialize(cancellationToken);
+            CheckButtonsState();
+            
+            ActivateItemAsync(Steps.First(), cancellationToken);
 
             return t;
         }
@@ -53,24 +56,31 @@ namespace Public.Views
             if (_isLocked) throw new InvalidOperationException("ViewModel cannot be added after object is activated.");
             Steps.Add(step);
         }
-
-
-        private void Initialize(CancellationToken cancellationToken)
-        {
-            ActivateItemAsync(Steps.First(), cancellationToken);
-        }
         
         
         // ----- BUTTONS
 
 
-        public bool IsPreviousButtonVisible => Steps.ElementAt(_cursor).CanGoBack();
-        public bool IsNextButtonVisible => Steps.ElementAt(_cursor).CanContinue();
-        public bool IsFinishButtonVisible => _cursor == (Steps.Count - 1);
+        public bool IsPreviousButtonVisible { get; set; }
+        public bool IsNextButtonVisible { get; set; }
+        public bool IsFinishButtonVisible { get; set; }
 
 
         private void CheckButtonsState()
         {
+            IsPreviousButtonVisible = true;
+            IsNextButtonVisible = true;
+            IsFinishButtonVisible = false;
+            
+            if (_cursor == 0) {
+                IsPreviousButtonVisible = false;
+            }
+
+            if (_cursor == Steps.Count - 1) {
+                IsNextButtonVisible = false;
+                IsFinishButtonVisible = true;
+            }
+            
             NotifyOfPropertyChange(nameof(IsPreviousButtonVisible));
             NotifyOfPropertyChange(nameof(IsNextButtonVisible));
             NotifyOfPropertyChange(nameof(IsFinishButtonVisible));
@@ -99,6 +109,7 @@ namespace Public.Views
             
             // move to the next step of settings
             _cursor++;
+            CheckButtonsState();
             var nextVM = Steps.ElementAt(_cursor);
             nextVM.PrepareBeforeActivation(Settings);
             ActivateItemAsync(nextVM, CancellationToken.None);
@@ -117,13 +128,26 @@ namespace Public.Views
             // Cancel the background Task of previous Step
             var ct = CancellationTokenSources[_cursor - 1];
             CancellationTokenSources.Remove(_cursor - 1);
+            BackgroundWorks.Remove(_cursor - 1);
             ct.Cancel();
             ct.Dispose();
             
             // Move to the previous Step
             _cursor--;
+            CheckButtonsState();
             Steps.ElementAt(_cursor).PrepareBeforeActivation(Settings);
             ActivateItemAsync(Steps.ElementAt(_cursor), CancellationToken.None);
+        }
+
+
+        public void FinishSettings()
+        {
+            Steps.ElementAt(Steps.Count - 1).ModifySettings(Settings);
+            
+            // todo check for exceptions in background tasks
+            Task.WaitAll(BackgroundWorks.Values.ToArray());
+            
+            OnFinishedSettings?.Invoke(Settings);
         }
     }
 }

@@ -10,27 +10,52 @@ namespace Measurement.Facades
     public class ContractFacade
     {
         private readonly IOrdersWriter _ordersWriter;
+        private readonly IOrdersLoader _ordersLoader;
+        private readonly IItemsWriter _itemsWriter;
         private readonly IItemsLoader _itemsLoader;
 
 
         public ContractFacade(
             IOrdersWriter ordersWriter,
+            IOrdersLoader ordersLoader,
+            IItemsWriter itemsWriter,
             IItemsLoader itemsLoader
         ) {
             _ordersWriter = ordersWriter;
+            _ordersLoader = ordersLoader;
+            _itemsWriter = itemsWriter;
             _itemsLoader = itemsLoader;
         }
 
 
-        public ResultObject<Order> SaveOrder(Order order)
+        public Task<ResultObject<Order>> SaveOrder(Order order)
         {
             return _ordersWriter.Save(order);
         }
 
 
-        public Task<ImmutableList<Item>> FindItemsByOrderName(string orderName)
+        public Task<ResultObject<Item>> SaveItem(Item item)
         {
-            return _itemsLoader.FindByOrderName(orderName);
+            return _itemsWriter.Save(item);
         }
+
+
+        public Task<ResultObject<Order>> GetOrderByName(string name)
+        {
+            return _ordersLoader.GetByName(name);
+        }
+        
+
+        public Task<ResultObject<ImmutableList<Item>>> FindByOrder(Order order)
+        {
+            return _itemsLoader.FindByOrder(order);
+        }
+
+        
+        public Task<ResultObject<ImmutableList<Item>>> FindByOrder(int orderId)
+        {
+            return _itemsLoader.FindByOrder(orderId);
+        }
+
     }
 }

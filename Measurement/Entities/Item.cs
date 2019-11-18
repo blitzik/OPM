@@ -1,13 +1,29 @@
 ﻿using System;
+using SQLitePCL;
 
 namespace Measurement.Entities
 {
     public class Item
     {
-        public Order Order { get; set; }
+        public int ItemId { get; private set; }
         
-        public int Number { get; set; }
+        public int OrderID { get; private set; }
+
+        private Order _order;
+        public Order Order
+        {
+            get => _order;
+            set
+            {
+                _order = value;
+                OrderID = value.OrderId;
+            }
+        }
+
+        public int Number { get; private set; }
         
+        
+        private Item() {}
 
         public Item(Order order, int number)
         {

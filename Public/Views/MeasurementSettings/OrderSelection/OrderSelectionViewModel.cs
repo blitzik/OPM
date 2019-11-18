@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Measurement.Entities;
 using Measurement.Facades;
 using Common.ExtensionMethods;
+using Common.Utils.ResultObject;
 using MSettings = Measurement.Entities.MeasurementSettings;
 
 namespace Public.Views
@@ -26,8 +27,16 @@ namespace Public.Views
         }
 
 
-        private int _itemNumber;
-        public int ItemNumber
+        private Order _order;
+        public Order Order
+        {
+            get => _order;
+            set { Set(ref _order, value); }
+        }
+        
+
+        private int? _itemNumber;
+        public int? ItemNumber
         {
             get => _itemNumber;
             set { Set(ref _itemNumber, value); }
@@ -66,30 +75,37 @@ namespace Public.Views
 
         public bool CanContinue()
         {
-            return true;
+            return !string.IsNullOrEmpty(OrderName) && ItemNumber != null;
         }
 
 
         public bool CanGoBack()
         {
-            return true;
+            return false;
         }
 
 
         public void PrepareBeforeActivation(MeasurementSettings settings)
         {
-            
         }
 
 
         public Task<MSettings> ModifySettings(MSettings settings)
         {
-            return Task<MSettings>.Factory.StartNew(() =>
+            // todo
+            return Task<MSettings>.Run(async () =>
             {
-                /*if (settings == null) {
-                    settings = new MSettings(); 
-                } */
-                return new MSettings(new Item(new Order(), 10));
+                if (Order == null) {
+                    var result = await _contractFacade.SaveOrder(new Order(OrderName));
+                    Order = result.Value;
+                }
+
+                if (SelectedItem == null) {
+                    var result = await _contractFacade.SaveItem(new Item(Order, ItemNumber ?? 0));
+                    SelectedItem = result.Value;
+                }
+                
+                return new MSettings(SelectedItem);
             });
         }
         
@@ -105,8 +121,22 @@ namespace Public.Views
 
         public async void SearchForItems()
         {
-            var items = await _contractFacade.FindItemsByOrderName(OrderName);
-            Items.Refill(items);
+            Items.Clear();
+            ItemNumber = null;
+            if (Order == null || !Order.Name.Equals(OrderName)) {
+                var orderResult = await _contractFacade.GetOrderByName(OrderName);
+                if (!orderResult.Success || orderResult.Value == null) {
+                    return;
+                }
+                Order = orderResult.Value;
+            }
+            
+            var itemsResult = await _contractFacade.FindByOrder(Order);
+            if (!itemsResult.Success || itemsResult.Value == null) {
+                return;
+            }
+            
+            Items.Refill(itemsResult.Value);
         }
     }
 }

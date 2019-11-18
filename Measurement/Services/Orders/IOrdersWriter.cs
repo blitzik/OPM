@@ -1,10 +1,11 @@
-﻿using Common.Utils.ResultObject;
+﻿using System.Threading.Tasks;
+using Common.Utils.ResultObject;
 using Measurement.Entities;
 
 namespace Measurement.Services.Orders
 {
     public interface IOrdersWriter
     {
-        ResultObject<Order> Save(Order order);
+        Task<ResultObject<Order>> Save(Order order);
     }
 }
