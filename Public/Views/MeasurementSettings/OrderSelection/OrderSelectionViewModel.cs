@@ -1,11 +1,10 @@
-﻿using System.Collections.Immutable;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Measurement.Entities;
 using Measurement.Facades;
 using Common.ExtensionMethods;
-using Common.Utils.ResultObject;
 using MSettings = Measurement.Entities.MeasurementSettings;
 
 namespace Public.Views
@@ -23,23 +22,23 @@ namespace Public.Views
         public string OrderName
         {
             get => _orderName;
-            set => Set(ref _orderName, value);
+            set
+            {
+                Set(ref _orderName, value);
+                OnRaiseCanExecuteChanged?.Invoke();
+            }
         }
 
-
-        private Order _order;
-        public Order Order
-        {
-            get => _order;
-            set { Set(ref _order, value); }
-        }
-        
 
         private int? _itemNumber;
         public int? ItemNumber
         {
             get => _itemNumber;
-            set { Set(ref _itemNumber, value); }
+            set
+            {
+                Set(ref _itemNumber, value);
+                OnRaiseCanExecuteChanged?.Invoke();
+            }
         }
 
 
@@ -61,6 +60,12 @@ namespace Public.Views
                 ItemNumber = value.Number;
             }
         }
+        
+        
+        private Order Order { get; set; }
+
+
+        public event Action OnRaiseCanExecuteChanged;
 
 
         private readonly ContractFacade _contractFacade;
@@ -70,6 +75,16 @@ namespace Public.Views
             Label = label;
             _contractFacade = contractFacade;
             Items = new ObservableCollection<Item>();
+        }
+        
+        
+        protected override Task OnActivateAsync(CancellationToken cancellationToken)
+        {
+            var t = base.OnActivateAsync(cancellationToken);
+
+            OnRaiseCanExecuteChanged?.Invoke();
+            
+            return t;
         }
 
 
@@ -130,6 +145,8 @@ namespace Public.Views
                 }
                 Order = orderResult.Value;
             }
+
+            var test = Order.Items;
             
             var itemsResult = await _contractFacade.FindByOrder(Order);
             if (!itemsResult.Success || itemsResult.Value == null) {

@@ -17,5 +17,7 @@ namespace Public.Views
         
         Task<TSettings> ModifySettings(TSettings settings);
         Task DoBackgroundWork(CancellationToken cancellationToken);
+
+        event Action OnRaiseCanExecuteChanged;
     }
 }

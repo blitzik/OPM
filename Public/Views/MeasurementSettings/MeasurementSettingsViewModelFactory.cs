@@ -6,12 +6,15 @@ namespace Public.Views
     public class MeasurementSettingsViewModelFactory
     {
         private readonly OrderSelectionViewModelFactory _orderSelectionViewModelFactory;
+        private readonly InitialMultimeterSettingsViewModelFactory _multimeterSettingsViewModelFactory;
 
-        
+
         public MeasurementSettingsViewModelFactory(
-            OrderSelectionViewModelFactory orderSelectionViewModelFactory
+            OrderSelectionViewModelFactory orderSelectionViewModelFactory,
+            InitialMultimeterSettingsViewModelFactory multimeterSettingsViewModelFactory
         ) {
             _orderSelectionViewModelFactory = orderSelectionViewModelFactory;
+            _multimeterSettingsViewModelFactory = multimeterSettingsViewModelFactory;
         }
 
 
@@ -20,6 +23,7 @@ namespace Public.Views
             var vm = new MeasurementSettingsViewModel(
                 _orderSelectionViewModelFactory.Create("Zvolení zakázky", "Zvolení zakázky")
             );
+            vm.AddStep(_multimeterSettingsViewModelFactory.Create("Nastavení multimetru", "Nastavení multimetru"));
 
             return vm;
         }

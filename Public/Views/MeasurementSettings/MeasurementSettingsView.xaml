@@ -102,7 +102,7 @@
                         <Button Grid.Column="0"
                                 Visibility="{Binding IsPreviousButtonVisible, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=reversed}"
                                 Content="Zpět"
-                                x:Name="LoadPrevious"
+                                Command="{Binding ReturnBackCommand}"
                                 Style="{StaticResource DefaultButton}" />
 
                         <Button Grid.Column="2"
@@ -114,7 +114,7 @@
                         <Button Grid.Column="2"
                                 Content="Další"
                                 Visibility="{Binding IsNextButtonVisible, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=reversed}"
-                                x:Name="LoadNext"
+                                Command="{Binding ContinueCommand}"
                                 Style="{StaticResource DefaultButton}" />
                                 
                     </Grid>

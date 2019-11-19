@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.Commands;
 
 namespace Public.Views
 {
@@ -13,6 +14,40 @@ namespace Public.Views
         {
             get => _steps;
             set { _steps = value; }
+        }
+
+
+        private DelegateCommand<object> _returnBackCommand;
+        public DelegateCommand<object> ReturnBackCommand
+        {
+            get
+            {
+                if (_returnBackCommand == null) {
+                    _returnBackCommand = new DelegateCommand<object>(
+                        p => LoadPrevious(),
+                        p => CanLoadPrevious()
+                    );
+                }
+
+                return _returnBackCommand;
+            }
+        }
+
+
+        private DelegateCommand<object> _continueCommand;
+        public DelegateCommand<object> ContinueCommand
+        {
+            get
+            {
+                if (_continueCommand == null) {
+                    _continueCommand = new DelegateCommand<object>(
+                        p => LoadNext(),
+                        p => CanLoadNext()
+                    );
+                }
+
+                return _continueCommand;
+            }
         }
 
 
@@ -50,11 +85,18 @@ namespace Public.Views
         }
 
 
-        public void AddStep(IStepViewModel<TSettings> step)
+        public BaseStepSettingsViewModel<TSettings> AddStep(IStepViewModel<TSettings> step)
         {
             if (step == null) throw new ArgumentNullException(nameof(step));
             if (_isLocked) throw new InvalidOperationException("ViewModel cannot be added after object is activated.");
+            step.OnRaiseCanExecuteChanged += () =>
+            {
+                ContinueCommand.RaiseCanExecuteChanged();
+                ReturnBackCommand.RaiseCanExecuteChanged();
+            };
             Steps.Add(step);
+
+            return this;
         }
         
         
@@ -87,14 +129,14 @@ namespace Public.Views
         }
         
         
-        public bool CanLoadNext()
+        private bool CanLoadNext()
         {
             if (_cursor == Steps.Count - 1) return false; 
             return Steps.ElementAt(_cursor).CanContinue();
         }
         
 
-        public async void LoadNext()
+        private async void LoadNext()
         {
             var currentVM = Steps.ElementAt(_cursor);
             // Apply changes to the settings by currently activated ViewModel
@@ -116,14 +158,14 @@ namespace Public.Views
         }
 
 
-        public bool CanLoadPrevious()
+        private bool CanLoadPrevious()
         {
             if (_cursor == 0) return false;
             return Steps.ElementAt(_cursor).CanGoBack();
         }
         
         
-        public void LoadPrevious()
+        private void LoadPrevious()
         {
             // Cancel the background Task of previous Step
             var ct = CancellationTokenSources[_cursor - 1];
@@ -140,7 +182,7 @@ namespace Public.Views
         }
 
 
-        public void FinishSettings()
+        private void FinishSettings()
         {
             Steps.ElementAt(Steps.Count - 1).ModifySettings(Settings);
             
