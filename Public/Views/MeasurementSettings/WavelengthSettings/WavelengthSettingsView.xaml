@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="Public.Views.WavelengthSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Public.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="175"></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <Grid>
+            <Grid.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="FontSize" Value="18" />
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="75"></RowDefinition>
+                <RowDefinition Height="10"></RowDefinition>
+                <RowDefinition Height="75"></RowDefinition>
+            </Grid.RowDefinitions>
+            
+            <Button Grid.Row="0">
+                <TextBlock Text="Měření na jedné vlnové délce" TextAlignment="Center" TextWrapping="Wrap" />
+            </Button>
+            
+            <Button Grid.Row="2">
+                <StackPanel>
+                    <TextBlock Text="1310nm" />
+                    <TextBlock Text="1550nm" />
+                    <TextBlock Text="1625nm" />
+                </StackPanel>
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Measurement.Entities;
 using Measurement.Facades;
 using Common.ExtensionMethods;
+using Common.Utils;
+using Common.Utils.ResultObject;
 using MSettings = Measurement.Entities.MeasurementSettings;
 
 namespace Public.Views
@@ -31,12 +34,14 @@ namespace Public.Views
 
 
         private int? _itemNumber;
-        public int? ItemNumber
+        public string ItemNumber
         {
-            get => _itemNumber;
+            get => _itemNumber.ToString();
             set
             {
-                Set(ref _itemNumber, value);
+                Set(ref _itemNumber, IntegersOnlyUtils.ConvertOnlyPositive(value, _itemNumber, true));
+                if (string.IsNullOrEmpty(value)) SelectedItem = null;
+                if (SelectedItem != null && !SelectedItem.Number.ToString().Equals(value)) SelectedItem = null;
                 OnRaiseCanExecuteChanged?.Invoke();
             }
         }
@@ -57,18 +62,21 @@ namespace Public.Views
             set
             {
                 Set(ref _selectedItem, value);
-                ItemNumber = value.Number;
+                do {
+                    if (value == null) break;
+                    ItemNumber = value.Number.ToString();
+                } while (false);
+                OnRaiseCanExecuteChanged?.Invoke();
             }
         }
         
         
         private Order Order { get; set; }
-
-
-        public event Action OnRaiseCanExecuteChanged;
-
+        
 
         private readonly ContractFacade _contractFacade;
+
+        public event Action OnRaiseCanExecuteChanged;
         public OrderSelectionViewModel(string title, string label, ContractFacade contractFacade)
         {
             Title = title;
@@ -82,21 +90,7 @@ namespace Public.Views
         {
             var t = base.OnActivateAsync(cancellationToken);
 
-            OnRaiseCanExecuteChanged?.Invoke();
-            
             return t;
-        }
-
-
-        public bool CanContinue()
-        {
-            return !string.IsNullOrEmpty(OrderName) && ItemNumber != null;
-        }
-
-
-        public bool CanGoBack()
-        {
-            return false;
         }
 
 
@@ -105,32 +99,18 @@ namespace Public.Views
         }
 
 
-        public Task<MSettings> ModifySettings(MSettings settings)
+        public bool CanProceed()
         {
-            // todo
-            return Task<MSettings>.Run(async () =>
-            {
-                if (Order == null) {
-                    var result = await _contractFacade.SaveOrder(new Order(OrderName));
-                    Order = result.Value;
-                }
-
-                if (SelectedItem == null) {
-                    var result = await _contractFacade.SaveItem(new Item(Order, ItemNumber ?? 0));
-                    SelectedItem = result.Value;
-                }
-                
-                return new MSettings(SelectedItem);
-            });
+            return !string.IsNullOrEmpty(OrderName) && !string.IsNullOrEmpty(ItemNumber);
         }
-        
 
-        public Task DoBackgroundWork(CancellationToken cancellationToken)
+
+        public MSettings ModifySettings(MSettings settings)
         {
-            return Task.CompletedTask;
+            return new MSettings(OrderName, int.Parse(ItemNumber));
         }
-        
-        
+
+
         // -----
 
 
@@ -146,8 +126,6 @@ namespace Public.Views
                 Order = orderResult.Value;
             }
 
-            var test = Order.Items;
-            
             var itemsResult = await _contractFacade.FindByOrder(Order);
             if (!itemsResult.Success || itemsResult.Value == null) {
                 return;

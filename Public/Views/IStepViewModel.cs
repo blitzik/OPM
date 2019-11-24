@@ -10,14 +10,12 @@ namespace Public.Views
         public string Label { get; }
         public bool IsActive { get; }
 
-        bool CanContinue();
-        bool CanGoBack();
-
-        void PrepareBeforeActivation(TSettings settings);
-        
-        Task<TSettings> ModifySettings(TSettings settings);
-        Task DoBackgroundWork(CancellationToken cancellationToken);
+        bool CanProceed();
 
         event Action OnRaiseCanExecuteChanged;
+        
+        void PrepareBeforeActivation(TSettings settings);
+        
+        TSettings ModifySettings(TSettings settings);
     }
 }

@@ -10,5 +10,6 @@ namespace Measurement.Services.Items
     {
         Task<ResultObject<ImmutableList<Item>>> FindByOrder(Order order);
         Task<ResultObject<ImmutableList<Item>>> FindByOrder(int orderId);
+        Task<ResultObject<Item>> GetByNumber(int orderId, int itemNumber);
     }
 }

@@ -44,6 +44,12 @@ namespace Measurement.Facades
         {
             return _ordersLoader.GetByName(name);
         }
+
+
+        public Task<ResultObject<Item>> GetByNumber(int orderId, int itemNumber)
+        {
+            return _itemsLoader.GetByNumber(orderId, itemNumber);
+        }
         
 
         public Task<ResultObject<ImmutableList<Item>>> FindByOrder(Order order)

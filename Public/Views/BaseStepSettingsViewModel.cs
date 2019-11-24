@@ -24,8 +24,7 @@ namespace Public.Views
             {
                 if (_returnBackCommand == null) {
                     _returnBackCommand = new DelegateCommand<object>(
-                        p => LoadPrevious(),
-                        p => CanLoadPrevious()
+                        p => LoadPrevious()
                     );
                 }
 
@@ -52,10 +51,6 @@ namespace Public.Views
 
 
         public TSettings Settings { get; protected set; }
-        
-        
-        public Dictionary<int, Task> BackgroundWorks { get; }
-        public Dictionary<int, CancellationTokenSource> CancellationTokenSources { get; }
 
         public event Action<TSettings> OnFinishedSettings;
         
@@ -67,8 +62,6 @@ namespace Public.Views
             AddStep(viewModel);
             _isLocked = false;
             _cursor = 0;
-            BackgroundWorks = new Dictionary<int, Task>();
-            CancellationTokenSources = new Dictionary<int, CancellationTokenSource>();
         }
 
 
@@ -127,12 +120,11 @@ namespace Public.Views
             NotifyOfPropertyChange(nameof(IsNextButtonVisible));
             NotifyOfPropertyChange(nameof(IsFinishButtonVisible));
         }
-        
-        
+
+
         private bool CanLoadNext()
         {
-            if (_cursor == Steps.Count - 1) return false; 
-            return Steps.ElementAt(_cursor).CanContinue();
+            return Steps.ElementAt(_cursor).CanProceed();
         }
         
 
@@ -140,15 +132,8 @@ namespace Public.Views
         {
             var currentVM = Steps.ElementAt(_cursor);
             // Apply changes to the settings by currently activated ViewModel
-            var t = currentVM.ModifySettings(Settings);
-            
-            // Start its background task
-            CancellationTokenSource ct = new CancellationTokenSource();
-            CancellationTokenSources.Add(_cursor, ct);
-            BackgroundWorks.Add(_cursor, currentVM.DoBackgroundWork(ct.Token));
+            Settings = currentVM.ModifySettings(Settings);
 
-            Settings = await t; // we need to wait for changed settings
-            
             // move to the next step of settings
             _cursor++;
             CheckButtonsState();
@@ -157,24 +142,9 @@ namespace Public.Views
             ActivateItemAsync(nextVM, CancellationToken.None);
         }
 
-
-        private bool CanLoadPrevious()
-        {
-            if (_cursor == 0) return false;
-            return Steps.ElementAt(_cursor).CanGoBack();
-        }
-        
         
         private void LoadPrevious()
         {
-            // Cancel the background Task of previous Step
-            var ct = CancellationTokenSources[_cursor - 1];
-            CancellationTokenSources.Remove(_cursor - 1);
-            BackgroundWorks.Remove(_cursor - 1);
-            ct.Cancel();
-            ct.Dispose();
-            
-            // Move to the previous Step
             _cursor--;
             CheckButtonsState();
             Steps.ElementAt(_cursor).PrepareBeforeActivation(Settings);
@@ -185,10 +155,7 @@ namespace Public.Views
         private void FinishSettings()
         {
             Steps.ElementAt(Steps.Count - 1).ModifySettings(Settings);
-            
-            // todo check for exceptions in background tasks
-            Task.WaitAll(BackgroundWorks.Values.ToArray());
-            
+
             OnFinishedSettings?.Invoke(Settings);
         }
     }

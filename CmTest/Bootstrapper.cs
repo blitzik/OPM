@@ -71,6 +71,7 @@ namespace CmTest
             _container.Singleton<MeasurementSettingsViewModelFactory>();
             _container.Singleton<OrderSelectionViewModelFactory>();
             _container.Singleton<InitialMultimeterSettingsViewModelFactory>();
+            _container.Singleton<WavelengthSettingsViewModelFactory>();
 
             
             // Facades

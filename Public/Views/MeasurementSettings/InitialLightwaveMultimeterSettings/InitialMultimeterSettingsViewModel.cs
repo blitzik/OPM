@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Navigation;
 using Measurement.Entities;
 using MSettings = Measurement.Entities.MeasurementSettings;
 
@@ -34,21 +35,7 @@ namespace Public.Views
         {
             var t = base.OnActivateAsync(cancellationToken);
 
-            OnRaiseCanExecuteChanged?.Invoke();
-            
             return t;
-        }
-
-
-        public bool CanContinue()
-        {
-            return true;
-        }
-        
-
-        public bool CanGoBack()
-        {
-            return true;
         }
         
 
@@ -56,21 +43,21 @@ namespace Public.Views
         {
             IsDeviceMarkedForReset = settings.IsMultimeterReset;
         }
-        
 
-        public async Task<MSettings> ModifySettings(MeasurementSettings settings)
+
+        public bool CanProceed()
+        {
+            return true;
+        }
+
+
+        public MSettings ModifySettings(MeasurementSettings settings)
         {
             if (settings == null) throw new ArgumentNullException();
 
             settings.IsMultimeterReset = IsDeviceMarkedForReset;
             
             return settings;
-        }
-        
-
-        public Task DoBackgroundWork(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
         }
     }
 }

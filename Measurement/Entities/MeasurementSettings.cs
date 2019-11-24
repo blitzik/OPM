@@ -4,13 +4,9 @@ namespace Measurement.Entities
 {
     public class MeasurementSettings : PropertyChangedBase
     {
-        private Item _item;
-        public Item Item
-        {
-            get => _item;
-            private set { Set(ref _item, value); }
-        }
-
+        public string OrderName { get; }
+        public int ItemNumber { get; }
+        
 
         private bool _isMultimeterReset;
         public bool IsMultimeterReset
@@ -20,9 +16,10 @@ namespace Measurement.Entities
         }
         
 
-        public MeasurementSettings(Item item)
+        public MeasurementSettings(string orderName, int itemNumber)
         {
-            Item = item;
+            OrderName = orderName;
+            ItemNumber = itemNumber;
             IsMultimeterReset = false;
         }
     }

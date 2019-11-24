@@ -17,6 +17,17 @@ namespace Measurement.Services.Items.SqLite
             _db = db;
         }
 
+
+        public Task<ResultObject<Item>> GetByNumber(int orderId, int itemNumber)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                var item = _db.Items.Where(i => i.OrderID == orderId && i.Number == itemNumber).SingleOrDefault();
+                
+                return new ResultObject<Item>(true, item);
+            });
+        }
+
         
         public Task<ResultObject<ImmutableList<Item>>> FindByOrder(Order order)
         {
